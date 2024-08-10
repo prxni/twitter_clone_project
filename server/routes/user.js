@@ -7,11 +7,10 @@ const Following = require('../models/following')
 const { authenticate } = require('../utils')
 
 router.get('/', authenticate, (req,res) => {
-    const id = res.user.id
-    User.findById(id)
+    const username = res.user.username
+    User.findByUsername(username)
     .then(result => {
-        const {password, __v, _id, ...user} = result.toObject()
-        res.status(200).json({ username: result.username, name: result.name, bio: result.bio })
+        res.status(200).json({ username: result.username, name: result.name })
     })
     .catch(err => res.status(400).json(err))
 })
