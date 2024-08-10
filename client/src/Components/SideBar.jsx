@@ -1,17 +1,15 @@
 import MenuItems from "./MenuItems";
 
-export default function SideBar()
-{
-    return(
-        <div className="flex w-72  h-screen bg-black top-2 px-10">
-            <div className="mt-10 space-y-7 flex select-none flex-col text-2xl text-yellow-100 font-serif">
-                <MenuItems  symbol="home" name="Home"/>
-                <MenuItems  symbol="search" name="Search"/>
-                <MenuItems  symbol="favorite" name="Likes"/>
-                <MenuItems  symbol="notifications" name="Notifications"/>
-                <MenuItems  symbol="bookmark" name="Saved"/>
-                <button className=" bg-blue-500 hover:bg-blue-400 rounded-md border-2 w-full font-mono font-bold">Post</button>
+export default function SideBar({location}) {
 
+    return(
+        <div id='sidebar' className="flex flex-col pl-6 pr-12 py-14 font-poppins h-screen bg-gray-50">
+            <div className="mt-10 space-y-8 flex select-none flex-col text-white w-full z-10">
+                    <MenuItems location={location} symbol="home" name="Home"/>
+                    <MenuItems location={location} symbol="search" name="Search"/>
+                    <MenuItems location={location} symbol="notifications" name="Notifications"/>
+                    <MenuItems location={location} symbol="account_circle" name="Profile"/>
+                    <MenuItems location={location} symbol="add" name="Post"/>
             </div>
         </div>
     )
