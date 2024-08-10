@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const Following = mongoose.Schema({
     self: String,
+    selfName: String,
     username: String,
     name: String
 })
