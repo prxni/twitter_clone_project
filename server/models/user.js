@@ -15,7 +15,11 @@ const User = new mongoose.Schema({
     bio: String,
     dob: Date,
     email: String,
-    phone: Number
+    phone: Number,
 })
+
+User.statics.findByUsername = function(username) {
+    return this.findOne().where('username').equals(username)
+}
 
 module.exports = new mongoose.model("User", User)

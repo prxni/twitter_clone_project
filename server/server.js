@@ -7,7 +7,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 mongoose.set('strictQuery', true)
-mongoose.connect('mongodb://127.0.0.1:27017/twitter')
+mongoose.connect(process.env.MONGOURI)
     .then(() => {
         console.log('Connection open')
     })
