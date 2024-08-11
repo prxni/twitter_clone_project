@@ -10,10 +10,15 @@ router.get('/', authenticate, (req,res) => {
     const id = res.user.id
     User.findById(id)
     .then(result => {
-        console.log(id)
         res.status(200).json({ id, username: result.username, name: result.name })
     })
     .catch(err => res.status(400).json(err))
+})
+
+router.get('/:username', (req,res) => {
+    User.findByUsername(req.params.username)
+    .then((result) => res.status(201).json({ username: result?.username }))
+    .catch(err => res.status(500).json(err))
 })
 
 router.post('/follow', authenticate, async (req,res) => {
