@@ -1,11 +1,17 @@
 const mongoose = require('mongoose')
 
 const Following = mongoose.Schema({
-    self: String,
-    selfName: String,
-    username: String,
-    name: String
+    selfId: {
+        type: mongoose.SchemaTypes.ObjectId,
+        required: true,
+        ref: "User"
+    },
+    userId: {
+        type: mongoose.SchemaTypes.ObjectId,
+        required: true,
+        ref: "User"
+    }
 })
-Following.index({ self: 1, username: 1}, { unique: true })
+Following.index({ selfId: 1, userId: 1}, { unique: true })
 
 module.exports = mongoose.model("Following", Following)
