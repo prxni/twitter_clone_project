@@ -12,7 +12,7 @@ function Login() {
     useEffect(() => {
         authorize()
         .then(() => {
-            if(user) navigate('/home')
+            if(user) navigate('/home');
         })
     })
 

@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import { axiosJwt } from "./useAxios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const AuthContext = createContext()
 
@@ -9,6 +9,7 @@ export default function AuthProvider({ children }) {
     const [ user, setUser ] = useState(null)
     const [ isLoading, setisLoading ] = useState(true)
     const navigate = useNavigate()
+    const location = useLocation()
 
     const authorize = async () => {
         axiosJwt.get('user')
@@ -17,7 +18,8 @@ export default function AuthProvider({ children }) {
             setisLoading(false)
         })
         .catch(() => {
-            navigate('/')
+            if(location.pathname!='/') navigate('/', { replace: true })
+            setisLoading(false)
         })
     }
     
