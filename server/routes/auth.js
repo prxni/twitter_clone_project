@@ -12,7 +12,8 @@ dotenv.config()
 router.post('/signup', encrypt, async (req,res) => {
     const user = new User({ 
         username: req.body.username, 
-        password: req.body.password, 
+        password: req.body.password,
+        name: req.body.name || "", 
         email: req.body.email || "", 
         bio: "",
         following: []
@@ -85,12 +86,12 @@ function encrypt(req,res,next) {
 }
 
 function getAccessToken(user) {
-    const data = { _id: user._id, username: user.username }
-    return jwt.sign(data, process.env.ACCESSKEY, { expiresIn: '5m' })
+    const data = { id: user._id, name: user.name, username: user.username }
+    return jwt.sign(data, process.env.ACCESSKEY, { expiresIn: '30m' })
 }
 
 function getRefreshToken(user) {
-    const data = { _id: user._id, username: user.username }
+    const data = { id: user._id, name: user.name, username: user.username }
     const token = jwt.sign(data, process.env.REFRESHKEY, { expiresIn: '1h' })
     const newToken = new Token({ token })
     newToken.save()

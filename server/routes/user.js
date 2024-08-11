@@ -7,10 +7,11 @@ const Following = require('../models/following')
 const { authenticate } = require('../utils')
 
 router.get('/', authenticate, (req,res) => {
-    const username = res.user.username
-    User.findByUsername(username)
+    const id = res.user.id
+    User.findById(id)
     .then(result => {
-        res.status(200).json({ username: result.username, name: result.name })
+        console.log(id)
+        res.status(200).json({ id, username: result.username, name: result.name })
     })
     .catch(err => res.status(400).json(err))
 })
@@ -22,40 +23,41 @@ router.post('/follow', authenticate, async (req,res) => {
     .catch(err => res.status(400).json(err))
     if(!user) return res.status(404).json({ message: "User not found" });
 
-    Following.create({ self: res.user.username, username: req.body.username, name: user.name })
+    Following.create({ selfId: res.user.id, userId: user.id })
     .then(() => {
         res.status(201).json({ message: "Followed succesfully" })
     })
     .catch((err) => {
-        if(err.code===11000) return res.status(400).json({ message: "Duplicate follow" })
+        if(err.code===11000) return res.status(400).json({ message: "Duplicate follow", err })
         res.status(400).json(err)
     })
 })
 
-router.get('/following/:username', (req,res) => {
-    Following.find().where('self').equals(req.params.username).select(['username','name'])
-    .then(result => {
-        return res.status(200).json(result);
-    })
+router.get('/following/:username', async (req,res) => {
+    const user = await User.findByUsername(req.params.username)
+    if(!user) return res.status(404).json({ message: "User not found" })
+
+    await Following.find().where('selfId').equals(user._id).select('userId')
+    .populate('userId')
+    .then(result => res.status(200).json(result.map(data => data.userId.username)))
     .catch(err => res.status(500).json(err))
 })
 
 router.get('/followers/:username', async (req,res) => {
-    const result = await Following.find().where('username').equals(req.params.username).select(['self'])
-    if(!result) return res.status(400).json({ message: "Couldn't make request" });
+    const user = await User.findByUsername(req.params.username)
+    if(!user) return res.status(404).json({ message: "User not found" })
 
-    const users = []
-    for(each of result) {
-        await User.findByUsername(each.self)
-        .then(user => {
-            users.push({ username: user.username, name: user.name })
-        })
-    }
-    res.status(200).json(users)
+    await Following.find().where('userId').equals(user._id).select('selfId')
+    .populate('selfId')
+    .then(result => res.status(200).json(result.map(data => data.selfId.username)))
+    .catch(err => res.status(400).json(err))
 })
 
-router.post('/unfollow', authenticate, (req,res) => {
-    Following.deleteOne().where('username').equals(req.body.username)
+router.post('/unfollow', authenticate, async (req,res) => {
+    const user = await User.findByUsername(req.body.username)
+    if(!user) return res.status(404).json({ message: "User not found" })
+
+    Following.deleteOne().where('userId').equals(user._id)
     .then((result) => {
         if(result.deletedCount===1) res.status(201).json({ message: "Unfollowed succesfully" });
         else res.status(201).json({ message: "User not included in following list" })
