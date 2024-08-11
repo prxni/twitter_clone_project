@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import Layout from "../Layouts/Layout";
 import { AuthContext } from "../Auth/AuthContext";
-
+import Card from "../Components/Card";
 export default function Home(){
 
     const { authorize, user, isLoading } = useContext(AuthContext)
@@ -14,7 +14,7 @@ export default function Home(){
         <div>
             {!isLoading && user && 
             <Layout location="home">
-                <div></div>
+                <Card/>
             </Layout>}
         </div>
     )
