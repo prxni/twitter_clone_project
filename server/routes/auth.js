@@ -57,8 +57,9 @@ router.post('/refresh', async (req,res) => {
     jwt.verify(token, process.env.REFRESHKEY, (err,user) => {
         if(err) return res.status(403).json(err.message);
 
-        const accessToken = getAccessToken(user)
-        const refreshToken = getRefreshToken(user)
+        const data = { _id: user.id, ...user }
+        const accessToken = getAccessToken(data)
+        const refreshToken = getRefreshToken(data)
         res.status(201).json({ accessToken, refreshToken })
     })
 })
@@ -87,7 +88,7 @@ function encrypt(req,res,next) {
 
 function getAccessToken(user) {
     const data = { id: user._id, name: user.name, username: user.username }
-    return jwt.sign(data, process.env.ACCESSKEY, { expiresIn: '5m' })
+    return jwt.sign(data, process.env.ACCESSKEY, { expiresIn: '3s' })
 }
 
 function getRefreshToken(user) {

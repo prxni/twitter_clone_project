@@ -1,23 +1,23 @@
 import { Link } from "react-router-dom"
-function Post()
-{
+function Post(){
+
     return(
-        <div className="bg-white border-2 rounded-lg shadow-sm  shadow-teal-200 p-3 px-10 m-3 ">
-            <Link className="italic text-sm font-semibold text-rose-400 hover:underline duration-100">@username</Link>
-            <h1 className="text-cyan-400">Name</h1>
+        <div className="bg-white rounded-lg shadow-sm hover:shadow-[0_0_9px_0.5px] hover:shadow-cyan-300 duration-150 p-3 px-10 m-3 font-poppins selection:bg-slate-200">
+            <Link className="italic text-sm font-semibold text-rose-400 hover:underline decoration-2 duration-100">@username</Link>
+            <h1 className="text-cyan-400 font-semibold my-0 py-0">Name</h1>
             <p className="p-3">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Temporibus maxime esse accusantium non et, dolores blanditiis minima sunt nemo eaque mollitia, dolorum cupiditate ipsam animi natus reprehenderit exercitationem consequuntur cum!
             </p>
-            <div className="flex flex-row gap-3 mt-2 text-slate-600 items-center">
-                <div className="flex flex-row justify-center items-center hover:text-red-500">
+            <div className="flex flex-row gap-3 mt-2 text-slate-600 items-center select-none">
+                <div className="flex flex-row justify-center items-center hover:text-rose-500 duration-150">
                     <span className="material-symbols-outlined p-1 ">favorite</span>
                     <p>5.3k</p>
                 </div>
-                <div className="flex flex-row justify-center items-center hover:text-cyan-400 ">
+                <div className="flex flex-row justify-center items-center hover:text-cyan-400 duration-150">
                     <span className="material-symbols-outlined p-1">chat_bubble</span>
                     <p>265</p>
                 </div>
-                <span className="material-symbols-outlined text-xl hover:text-cyan-400">share</span>
+                <span className="material-symbols-outlined text-xl hover:text-cyan-400 duration-150">share</span>
                 <p className="text-slate-400">5hr ago</p>
             </div>
             
