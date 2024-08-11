@@ -1,12 +1,13 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useAxios } from '../Auth/useAxios'
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../Auth/AuthContext"
 
 function Login() {
 
     const axios = useAxios()
     const navigate = useNavigate()
+    const [ errorMsg, setErrorMsg ] = useState("")
     const { authorize, user, isLoading } = useContext(AuthContext)
 
     useEffect(() => {
@@ -20,23 +21,48 @@ function Login() {
         evt.preventDefault()
         const username = evt.target[0].value
         const password = evt.target[1].value
+
+        if(!username) {
+            setErrorMsg("Username is required")
+            return;
+        }
+        if (!password) {
+            setErrorMsg("Password is required")
+            return;
+        }
         
         axios.post('/auth/login', { username, password })
         .then(res => {
-            document.cookie = `auth= ${res.data.accessToken};`
-            document.cookie = `token= ${res.data.refreshToken};`
-            navigate('/home')
+            if(res.data.errorCode===104) {
+                setErrorMsg("User not found")
+                return;
+            }
+            
+            if(res.data.errorCode===103) {
+                setErrorMsg("Wrong Password")
+                return;
+            }
+            
+            if(!res.data.errorCode) {
+                document.cookie = `auth= ${res.data.accessToken};`
+                document.cookie = `token= ${res.data.refreshToken};`
+                navigate('/home')
+            }
         })
+        .catch(() => setErrorMsg("Couldn't complete request"))
     }
 
     return(
         <div className="bg-gradient-to-r from-purple-100 via-cyan-100 to-purple-100 flex flex-col font-poppins absolute justify-center items-center h-svh w-full border-2">
             {!isLoading && !user && <div className="flex flex-col items-center hover:shadow-md duration-150 bg-white hover:shadow-teal-300 gap-5 text-[20px] justify-center py-9 text-center border-blue-200 border-2 shadow-teal-300 shadow-sm rounded-xl w-[30%] h-fit ">
                 <h1 className="text-3xl font-semibold select-none ">Login</h1>
-                <form onSubmit={login} className="flex flex-col pt-6 items-center gap-3 w-[70%]" >
+                <div className="w-[70%] min-h-6">
+                    {errorMsg && <div className="flex justify-center items-center gap-x-1 text-rose-500 border-rose-400 border-2 rounded w-full"><span className="material-symbols-outlined inline text-sm select-none">error</span><p className="inline text-sm">{errorMsg}</p></div>}
+                </div>
+                <form onSubmit={login} className="flex flex-col pt-3 items-center gap-3 w-[70%]" >
                     <input autoComplete="off" spellCheck="false" className="text-lg border-b-2 w-[80%] outline-none focus-within:border-teal-300 hover:border-teal-300 bg-transparent duration-150" placeholder="Username"/>
                     <input autoComplete="off" spellCheck="false" className="text-lg border-b-2 w-[80%] outline-none focus-within:border-teal-300 hover:border-teal-300 bg-transparent duration-150"  placeholder="Password"/>
-                    <button className="cursor-default text-base font-semibold border-2 mt-5 mb-2 rounded-lg hover:bg-slate-900 duration-200 hover:text-cyan-100 px-5 py-1 bg-black text-white">Login</button>
+                    <button className="cursor-default text-base font-semibold border-2 mt-5 mb-2 rounded-lg hover:bg-slate-800 duration-150 px-5 py-1 bg-black text-white">Login</button>
                 </form>
 
                 <p className="text-sm space-x-1">

@@ -12,7 +12,8 @@ dotenv.config()
 router.post('/signup', encrypt, async (req,res) => {
     const user = new User({ 
         username: req.body.username, 
-        password: req.body.password, 
+        password: req.body.password,
+        name: req.body.name || "", 
         email: req.body.email || "", 
         bio: "",
         following: []
@@ -26,7 +27,7 @@ router.post('/signup', encrypt, async (req,res) => {
     })
     .catch((err) => {
         if (err.code===11000) {
-            return res.status(401).json({ message: "Username already exists" })
+            return res.status(201).json({ errorCode: 110, message: "Username already exists" })
         } else {
             return res.status(500).json(err)
         }
@@ -35,11 +36,11 @@ router.post('/signup', encrypt, async (req,res) => {
 
 router.post('/login', async (req,res) => {
     const user = await User.findOne().where('username').equals(req.body.username)
-    if(!user) return res.status(400).json({ message: "User not found" });
+    if(!user) return res.status(201).json({ errorCode: 104, message: "User not found" });
 
     bcrypt.compare(req.body.password,user.password, (err,result) => {
-        if(err) return res.status(403).json({ message: "Wrong password" });
-
+        if(!result) return res.status(201).json({ errorCode: 103, message: "Wrong password" });
+        
         const accessToken = getAccessToken(user)
         const refreshToken = getRefreshToken(user)
         res.status(201).json({ accessToken, refreshToken })
@@ -48,13 +49,13 @@ router.post('/login', async (req,res) => {
 
 router.post('/refresh', async (req,res) => {
     const token = req.body.token
-    if(!token) return res.status(400).json({ message: "Token not found" });
+    if(!token) return res.status(403).json({ message: "Token not found" });
 
     const result = await Token.deleteOne().where('token').equals(token);
     if(!result.deletedCount) return res.status(403).json({ message: "Authorization failed" });
 
     jwt.verify(token, process.env.REFRESHKEY, (err,user) => {
-        if(err) return res.status(403).json(err);
+        if(err) return res.status(403).json(err.message);
 
         const accessToken = getAccessToken(user)
         const refreshToken = getRefreshToken(user)
@@ -85,12 +86,12 @@ function encrypt(req,res,next) {
 }
 
 function getAccessToken(user) {
-    const data = { id: user._id, username: user.username }
+    const data = { id: user._id, name: user.name, username: user.username }
     return jwt.sign(data, process.env.ACCESSKEY, { expiresIn: '5m' })
 }
 
 function getRefreshToken(user) {
-    const data = { id: user._id, username: user.username }
+    const data = { id: user._id, name: user.name, username: user.username }
     const token = jwt.sign(data, process.env.REFRESHKEY, { expiresIn: '1h' })
     const newToken = new Token({ token })
     newToken.save()
