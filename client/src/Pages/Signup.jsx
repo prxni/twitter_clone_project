@@ -1,11 +1,6 @@
-import { Link } from "react-router-dom"
-// import DatePicker from "react-datepicker"
-// import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
 
 function Login()
 {
-    const [date,setDate]=useState(new Date());
     return(
         <div className="bg-gradient-to-r from-purple-100 via-cyan-100 to-purple-100 flex flex-col font-poppins absolute justify-center items-center h-svh w-full border-2">
         <div className="flex flex-col items-center hover:shadow-md bg-white hover:shadow-teal-300 duration-150  gap-5 text-[20px] justify-center py-9 text-center border-blue-200 border-2 shadow-teal-300 shadow-sm rounded-xl w-[30%] h-fit ">
