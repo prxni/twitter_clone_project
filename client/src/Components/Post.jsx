@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 function Post(){
 
     return(
-        <div className="bg-white rounded-lg shadow-sm hover:shadow-[0_0_9px_0.5px] hover:shadow-cyan-300 duration-150 p-3 px-10 m-3 font-poppins selection:bg-slate-200">
+        <div className="bg-white rounded-lg shadow-sm hover:shadow-[0_0_10px_2px] hover:shadow-cyan-200 duration-150 p-3 px-10 m-3 selection:bg-slate-200">
             <Link className="italic text-sm font-semibold text-rose-400 hover:underline decoration-2 duration-100">@username</Link>
             <h1 className="text-cyan-400 font-semibold my-0 py-0">Name</h1>
             <p className="p-3">

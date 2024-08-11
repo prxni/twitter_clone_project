@@ -44,7 +44,9 @@ router.get('/following/:username', async (req,res) => {
 
     await Following.find().where('selfId').equals(user._id).select('userId')
     .populate('userId')
-    .then(result => res.status(200).json(result.map(data => data.userId.username)))
+    .then(result => res.status(200).json(result.map(data => {
+        return { id: data.userId._id, username: data.userId.username, name: data.userId.name }
+    })))
     .catch(err => res.status(500).json(err))
 })
 
@@ -54,7 +56,9 @@ router.get('/followers/:username', async (req,res) => {
 
     await Following.find().where('userId').equals(user._id).select('selfId')
     .populate('selfId')
-    .then(result => res.status(200).json(result.map(data => data.selfId.username)))
+    .then(result => res.status(200).json(result.map(data => {
+        return { id: data.selfId._id, username: data.selfId.username, name: data.selfId.name }
+    })))
     .catch(err => res.status(400).json(err))
 })
 

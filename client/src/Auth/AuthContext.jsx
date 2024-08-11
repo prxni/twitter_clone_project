@@ -7,6 +7,7 @@ export const AuthContext = createContext()
 export default function AuthProvider({ children }) {
 
     const [ user, setUser ] = useState(null)
+    const [ name, setName ] = useState(null)
     const [ isLoading, setisLoading ] = useState(true)
     const navigate = useNavigate()
     const location = useLocation()
@@ -15,6 +16,7 @@ export default function AuthProvider({ children }) {
         axiosJwt.get('user')
         .then(res => {
             setUser(res.data.username)
+            setName(res.data.name)
             setisLoading(false)
         })
         .catch(() => {
@@ -23,7 +25,7 @@ export default function AuthProvider({ children }) {
         })
     }
     
-    const context = { user, isLoading, authorize }
+    const context = { user, name, isLoading, authorize }
 
     return (
         <AuthContext.Provider value={context}>
