@@ -85,12 +85,12 @@ function encrypt(req,res,next) {
 }
 
 function getAccessToken(user) {
-    const data = { _id: user._id, username: user.username }
+    const data = { id: user._id, username: user.username }
     return jwt.sign(data, process.env.ACCESSKEY, { expiresIn: '5m' })
 }
 
 function getRefreshToken(user) {
-    const data = { _id: user._id, username: user.username }
+    const data = { id: user._id, username: user.username }
     const token = jwt.sign(data, process.env.REFRESHKEY, { expiresIn: '1h' })
     const newToken = new Token({ token })
     newToken.save()
