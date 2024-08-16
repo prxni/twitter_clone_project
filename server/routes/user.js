@@ -21,6 +21,16 @@ router.get('/:username', (req,res) => {
     .catch(err => res.status(500).json(err))
 })
 
+router.get('/:user/follows/:username', async (req,res) => {
+    const self = await User.findOne().where('username').equals(req.params.user)
+    const user = await User.findOne().where('username').equals(req.params.username)
+
+    if(!self || !user) return res.status(400).json({ message: "Cannot find user" });
+
+    Following.findOne().where('selfId').equals(self._id).where('userId').equals(user._id)
+    .then(result => res.status(201).json(result!==null))
+})
+
 router.post('/follow', authenticate, async (req,res) => {
     if(req.body.username==res.user.username) return res.status(400).json({ message: "Invalid request" });
 
@@ -28,7 +38,7 @@ router.post('/follow', authenticate, async (req,res) => {
     .catch(err => res.status(400).json(err))
     if(!user) return res.status(404).json({ message: "User not found" });
 
-    Following.create({ selfId: res.user.id, userId: user.id })
+    Following.create({ selfId: res.user.id, userId: user._id })
     .then(() => {
         res.status(201).json({ message: "Followed succesfully" })
     })
@@ -65,13 +75,28 @@ router.get('/followers/:username', async (req,res) => {
 router.post('/unfollow', authenticate, async (req,res) => {
     const user = await User.findByUsername(req.body.username)
     if(!user) return res.status(404).json({ message: "User not found" })
-
-    Following.deleteOne().where('userId').equals(user._id)
+        
+    Following.deleteOne({ selfId: res.user.id, userId: user._id})
     .then((result) => {
         if(result.deletedCount===1) res.status(201).json({ message: "Unfollowed succesfully" });
         else res.status(201).json({ message: "User not included in following list" })
     })
     .catch(err => res.status(500).json(err))
+})
+
+router.get('/search/:query', (req,res) => {
+    const query = req.params.query
+    const max = 15;
+    
+    User.find().or([ { "username": { $regex: `${query}`, $options: 'i' } }, { "name": { $regex: `${query}`, $options: 'i' } }])
+    .limit(max)
+    .then(result => {
+        const users = result.map(user => {
+            return { username: user.username, name: user.name }
+        })
+        res.status(201).json(users)
+    })
+
 })
 
 module.exports = router

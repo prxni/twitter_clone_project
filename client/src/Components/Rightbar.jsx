@@ -6,25 +6,21 @@ import { useAxios } from "../Auth/useAxios"
 function Rightbar() {
 
     const { user } = useContext(AuthContext)
-    let [ following, setFollowing ] = useState([])
-    let [ followers, setFollowers ] = useState([])
+    const [ following, setFollowing ] = useState([])
+    const [ followers, setFollowers ] = useState([])
     const axios = useAxios()
 
     useEffect(() => {
-        if(!following.length){
-            axios.get(`user/following/${user}`)
-            .then((res) => {
-                setFollowing(res.data);
-            })
-        }
+        axios.get(`user/following/${user}`)
+        .then((res) => {
+            setFollowing(res.data);
+        })
 
-        if(!followers.length){
-            axios.get(`user/followers/${user}`)
-            .then((res) => {
-                setFollowers(res.data);
-            })
-        }
-    })
+        axios.get(`user/followers/${user}`)
+        .then((res) => {
+            setFollowers(res.data);
+        })
+    }, [])
 
     return(
         <div className="fixed bg-white h-svh w-[20%]">
