@@ -8,7 +8,7 @@ const Posts = new mongoose.Schema({
         required:true,
     },
     timeStamp:Date,
-    likedby:[mongoose.SchemaTypes.ObjectId]
+    likedBy:[mongoose.SchemaTypes.ObjectId]
     
 })
 module.exports = mongoose.model("Posts", Posts)

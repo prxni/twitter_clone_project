@@ -27,7 +27,7 @@ export default function FollowButton({ user, username }) {
     } 
 
     return (
-        <div>
+        <div className="justify-self-center select-none">
             {!searchLoading && !follows && user!==username &&
             <button onClick={follow} className="text-cyan-400 font-medium border-2 border-cyan-400 rounded-full w-fit justify-self-end px-3 py-1 hover:bg-cyan-400 hover:text-white duration-150">
                 <span>Follow</span>

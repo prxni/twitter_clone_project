@@ -8,6 +8,7 @@ export default function AuthProvider({ children }) {
 
     const [ user, setUser ] = useState(null)
     const [ name, setName ] = useState(null)
+    const [ id, setId ] = useState(null)
     const [ isLoading, setisLoading ] = useState(true)
     const navigate = useNavigate()
     const location = useLocation()
@@ -17,6 +18,7 @@ export default function AuthProvider({ children }) {
         .then(res => {
             setUser(res.data.username)
             setName(res.data.name)
+            setId(res.data.id)
             setisLoading(false)
         })
         .catch(() => {
@@ -25,7 +27,7 @@ export default function AuthProvider({ children }) {
         })
     }
     
-    const context = { user, name, isLoading, authorize }
+    const context = { id, user, name, isLoading, authorize }
 
     return (
         <AuthContext.Provider value={context}>
