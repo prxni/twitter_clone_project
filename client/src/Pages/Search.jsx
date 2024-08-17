@@ -23,11 +23,11 @@ export default function Search() {
     }
 
     return (
-        <div>
+        <div className="selection:bg-slate-200">
             {!isLoading &&
-                <Layout>
+                <Layout location="search">
                     <div className="min-h-svh h-fit flex flex-col gap-y-10 py-[3svh] items-center">
-                        <input onChange={search} className="p-2 px-3 rounded-lg outline-none w-[70%]" type="text"placeholder="Search..." />
+                        <input onChange={search} autoComplete="off" spellCheck="false" className="p-2 px-3 rounded-lg outline-none w-[70%] select-text" type="text"placeholder="Search..." />
                         <div className="w-full flex flex-col gap-8 items-center">
                             {userList.length>0 && userList.map( resUser => {
                                 return (
