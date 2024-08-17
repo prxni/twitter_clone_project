@@ -3,8 +3,9 @@ const router = express.Router()
 
 const User = require('../models/user')
 const Following = require('../models/following')
+const Post = require('../models/posts')
 
-const { authenticate } = require('../utils')
+const { authenticate, filterAsync } = require('../utils')
 
 router.get('/', authenticate, (req,res) => {
     const id = res.user.id
@@ -15,10 +16,29 @@ router.get('/', authenticate, (req,res) => {
     .catch(err => res.status(400).json(err))
 })
 
+router.get('/feed', authenticate, (req,res) => {
+    Post.find().sort({ timeStamp: -1 }).limit(10)
+    .then(async result => {
+        const posts = await filterAsync(result, async (item) => {
+            if(res.user.id==item.userId) return true;
+            const follows = await Following.findOne({ selfId: res.user.id, userId: item.userId })
+            return follows
+        })
+        res.status(201).json(posts.map(post => { 
+            return { id: post._id, userId: post.userId, text: post.text, likes: post.likedBy.length, liked: post.likedBy.includes(res.user.id) }
+        }))
+    })
+})
+
 router.get('/:username', (req,res) => {
     User.findByUsername(req.params.username)
-    .then((result) => res.status(201).json({ username: result?.username }))
+    .then((result) => res.status(201).json({ username: result.username, name: result.name }))
     .catch(err => res.status(500).json(err))
+})
+
+router.get('/id/:id', (req,res) => {
+    User.findById(req.params.id)
+    .then(result => res.status(201).json({ username: result.username, name: result.name }))
 })
 
 router.get('/:user/follows/:username', async (req,res) => {
