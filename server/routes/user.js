@@ -17,16 +17,38 @@ router.get('/', authenticate, (req,res) => {
 })
 
 router.get('/feed', authenticate, (req,res) => {
-    Post.find().sort({ timeStamp: -1 }).limit(10)
+    let time;
+    if(req.query.time!=null) {
+        time = new Date(req.query.time)
+        if (time=="Invalid Date") return res.status(400).json({ message: "Cannot cast query attribute time to date"})
+    }
+
+    const promise = time ? Post.find().sort({ timeStamp: -1 }).where('timeStamp').lt(time).limit(3)
+        : Post.find().sort({ timeStamp: -1 }).limit(4);
+    
+    promise
     .then(async result => {
         const posts = await filterAsync(result, async (item) => {
             if(res.user.id==item.userId) return true;
             const follows = await Following.findOne({ selfId: res.user.id, userId: item.userId })
             return follows
         })
-        res.status(201).json(posts.map(post => { 
-            return { id: post._id, userId: post.userId, text: post.text, likes: post.likedBy.length, liked: post.likedBy.includes(res.user.id) }
-        }))
+        res.status(201).json({
+            posts: posts.map(post => { 
+                return { 
+                    id: post._id, 
+                    userId: post.userId, 
+                    text: post.text, 
+                    likes: post.likedBy.length, 
+                    liked: post.likedBy.includes(res.user.id), 
+                    timeStamp: post.timeStamp
+                }
+            }),
+            last: {
+                id: result.slice(-1)[0]?._id,
+                timeStamp: result.slice(-1)[0]?.timeStamp
+            }
+        })
     })
 })
 
