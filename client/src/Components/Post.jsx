@@ -34,13 +34,13 @@ function Post({ id, observer, username, name, text, likes, liked }){
             <div className="flex flex-row gap-2 mt-2 text-slate-600 items-center select-none">
                 {hasLiked ? 
                     <div onClick={unlike} className="flex flex-row justify-center items-center text-rose-500 duration-150 cursor-pointer">
-                        <span className="material-symbols-outlined px-1 [font-variation-settings:'FILL'1]">favorite</span>
-                        <p className="min-w-3">{likeNo}</p>
+                        <span className="material-symbols-outlined [font-variation-settings:'FILL'1]">favorite</span>
+                        <p className="min-w-3 px-1">{likeNo}</p>
                     </div>
                 :
                     <div onClick={like} className="flex flex-row justify-center items-center hover:text-rose-500 duration-150 cursor-pointer">
-                        <span className="material-symbols-outlined px-1">favorite</span>
-                        <p className="min-w-3">{likeNo}</p>
+                        <span className="material-symbols-outlined">favorite</span>
+                        <p className="min-w-3 px-1">{likeNo}</p>
                     </div>
                 }
 

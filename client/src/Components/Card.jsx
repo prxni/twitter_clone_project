@@ -66,7 +66,7 @@ function Card() {
 
             <div id="post-list" className="w-full flex flex-col items-center gap-3">
                 {postList.length>0 && postList.map((post) => {
-                    return <Post key={post.id} username={post.username} name={post.name} text={post.text} likes={post.likes} liked={post.liked} time={post.timeStamp} />
+                    return <Post key={post.id} id={post.id} username={post.username} name={post.name} text={post.text} likes={post.likes} liked={post.liked} time={post.timeStamp} />
                 })}
             </div>
 
