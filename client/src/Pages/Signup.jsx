@@ -25,6 +25,9 @@ function Login(){
         const email = evt.target[2].value
         const confirm = evt.target[3].value
 
+        // TODO
+        // handle invalid username or name values
+
         if(!username) setErrorMsg("Username is required");
         else if(usernameTaken) setErrorMsg("Username is already taken");
         else if(!password) setErrorMsg("Password is required");
@@ -49,7 +52,7 @@ function Login(){
             {errorMsg && <div className="flex justify-center items-center gap-x-1 text-rose-500 border-rose-400 border-2 rounded w-full"><span className="material-symbols-outlined inline text-sm select-none">error</span><p className="inline text-sm">{errorMsg}</p></div>}
         </div>
         <form onSubmit={signup} className="flex flex-col items-center gap-5 w-[70%]" >
-            <input onChange={handleUsernameChange} autoComplete="off" spellCheck="false" className={"text-base border-b-2 outline-none w-full bg-transparent duration-150 " + (usernameTaken ? "border-rose-400" : "hover:border-teal-300 focus-within:border-teal-400")} placeholder="Username"/>
+            <input autoFocus onChange={handleUsernameChange} autoComplete="off" spellCheck="false" className={"text-base border-b-2 outline-none w-full bg-transparent duration-150 " + (usernameTaken ? "border-rose-400" : "hover:border-teal-300 focus-within:border-teal-400")} placeholder="Username"/>
             <input type="password" autoComplete="off" spellCheck="false" className="text-base border-b-2 outline-none w-full hover:border-teal-300 focus-within:border-teal-300 bg-transparent duration-150"  placeholder="Password"/>
             <input autoComplete="off" spellCheck="false" className="text-base border-b-2 outline-none w-full hover:border-teal-300 focus-within:border-teal-300 bg-transparent duration-150" placeholder="Email"/>
             <input type="password" autoComplete="off" spellCheck="false" className="text-base border-b-2 outline-none w-full hover:border-teal-300 focus-within:border-teal-300 bg-transparent duration-150" placeholder="Confirm Password"/>
