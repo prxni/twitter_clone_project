@@ -22,7 +22,7 @@ export const getTime = (str) => {
     if(current.getDate() - time.getDate()>7) return (parseInt(((current.getMonth() - time.getMonth())*30 + (current.getDate() - time.getDate()))/7) + "w");
     if(current.getDate() - time.getDate()!=0) return (current.getDate() - time.getDate() + "d");
     if(current.getMinutes() - time.getMinutes()!=0) return (current.getMinutes() - time.getMinutes() + "m");
-    if(current.getSeconds() - time.getSeconds()!=0) return (current.getSeconds() - time.getSeconds() + "s");
+    if(current.getSeconds() - time.getSeconds()!=0) return "now";
 
     return ''
 }
