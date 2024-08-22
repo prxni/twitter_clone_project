@@ -60,7 +60,7 @@ function Login() {
                     {errorMsg && <div className="flex justify-center items-center gap-x-1 text-rose-500 border-rose-400 border-2 rounded w-full"><span className="material-symbols-outlined inline text-sm select-none">error</span><p className="inline text-sm">{errorMsg}</p></div>}
                 </div>
                 <form onSubmit={login} className="flex flex-col items-center gap-3 w-[70%]" >
-                    <input autoComplete="off" spellCheck="false" className="text-lg border-b-2 w-[80%] outline-none focus-within:border-teal-300 hover:border-teal-300 bg-transparent duration-150" placeholder="Username"/>
+                    <input autoFocus autoComplete="off" spellCheck="false" className="text-lg border-b-2 w-[80%] outline-none focus-within:border-teal-300 hover:border-teal-300 bg-transparent duration-150" placeholder="Username"/>
                     <input type="password" autoComplete="off" spellCheck="false" className="text-lg border-b-2 w-[80%] outline-none focus-within:border-teal-300 hover:border-teal-300 bg-transparent duration-150"  placeholder="Password"/>
                     <button className="cursor-default text-base font-semibold border-2 mt-5 mb-2 rounded-lg hover:bg-slate-800 duration-150 px-5 py-1 bg-black text-white">Login</button>
                 </form>

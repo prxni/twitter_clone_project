@@ -10,7 +10,7 @@ function Card() {
     const { name } = useContext(AuthContext)
     const [ postList, setPostList ] = useState([])
     const [ lastPost, setLastPost ] = useState(null)
-    const [ end, setEnd ] = useState(false)
+    const [ postLoading, setPostLoading ] = useState(true)
     
     useEffect(() => {
         fetchFeed()
@@ -23,6 +23,7 @@ function Card() {
 
         const observer = new IntersectionObserver((entry) => {
             if(entry[0].isIntersecting) {
+                setPostLoading(true)
                 fetchFeed()
                 observer.unobserve(current)
             }
@@ -35,13 +36,18 @@ function Card() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [postList])
 
-    function fetchFeed() {
-        if(end) return;
+    useEffect(() => {
+        if(!postLoading && postList.length===0 && lastPost?.id){
+            fetchFeed()
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [postLoading])
 
+    function fetchFeed() {
         axiosJwt.get(`/user/feed${lastPost?.time ? "?time=" + lastPost.time : ""}`)
         .then(res => {
             setLastPost({ id: res.data.last.id, time: res.data.last.timeStamp })
-            if(!res.data.last?.id) return setEnd(true);
+            if(!res.data.last?.id) return setPostLoading(false);
             
             const promises = res.data.posts.map(async post => {
                 return(await axios.get(`/user/id/${post.userId}`)
@@ -52,6 +58,7 @@ function Card() {
 
             Promise.all(promises).then((posts) => {
                 setPostList(curr => {
+                    setPostLoading(false)
                     return curr.concat(posts)
                 })
             })
@@ -70,7 +77,7 @@ function Card() {
                 })}
             </div>
 
-            {lastPost && lastPost.id && <LoadingCircles />}
+            {postLoading && <LoadingCircles />}
         </div>
     )
 }
