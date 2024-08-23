@@ -9,7 +9,7 @@ export default function SideBar({location}) {
                     <Link to='/home'><MenuItems location={location} symbol="home" name="Home"/></Link>
                     <Link to='/search'><MenuItems location={location} symbol="search" name="Search"/></Link>
                     <Link to='/'><MenuItems location={location} symbol="notifications" name="Notifications"/></Link>
-                    <Link to='/'><MenuItems location={location} symbol="account_circle" name="Profile"/></Link>
+                    <Link to='/profile'><MenuItems location={location} symbol="account_circle" name="Profile"/></Link>
                     <Link to='/'><MenuItems location={location} symbol="add" name="Post"/></Link>
             </div>
         </div>
