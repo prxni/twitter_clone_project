@@ -54,7 +54,7 @@ router.get('/feed', authenticate, (req,res) => {
 
 router.get('/:username', (req,res) => {
     User.findByUsername(req.params.username)
-    .then((result) => res.status(201).json({ username: result.username, name: result.name }))
+    .then((result) => res.status(201).json({ username: result.username, name: result.name, bio: result.bio}))
     .catch(err => res.status(500).json(err))
 })
 
@@ -139,6 +139,30 @@ router.get('/search/:query', (req,res) => {
         res.status(201).json(users)
     })
 
+})
+
+router.patch('/edit/bio', authenticate,async (req,res)=>{
+    const body = await User.findByUsername(res.user.username)
+    .catch(()=>res.status(400).json({message:"User not found!"}));
+
+    body.bio = req.body.bio;
+    body.save()
+    .then(() => res.status(200).json({
+        message:"Bio updated"
+    }))
+    .catch((err) => res.status(500).json(err));
+})
+
+router.patch('/edit/name', authenticate,async (req,res)=>{
+    const body=await User.findByUsername(res.user.username)
+    .catch(()=>res.status(400).json({
+        message:"User not found!"
+    }));
+
+    body.name=req.body.name;
+    body.save()
+    .then(()=>res.status(200).json({message:"Name updated"}))
+    .catch((err)=>res.status(500).json(err));
 })
 
 module.exports = router

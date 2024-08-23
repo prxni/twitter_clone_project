@@ -4,7 +4,7 @@ import Signup from "./Pages/Signup";
 import Login from "./Pages/Login";
 import AuthProvider from "./Auth/AuthContext";
 import Search from "./Pages/Search";
-
+import Profile from "./Pages/Profile";
 function App() {
 
 	return (
@@ -14,6 +14,7 @@ function App() {
 				<Route path="/home" element={<Home />} />
 				<Route path="/signup" element={<Signup />} />
 				<Route path="/search" element={<Search />} />
+				<Route path="/profile" element={<Profile />} />
 			</Routes>
 		</AuthProvider>
 	);
